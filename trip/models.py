@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -13,3 +14,21 @@ class Trip(models.Model):
 
     def __str__(self):
         return f"{self.city}-{self.country}"
+    
+# Note table -> trip, name, description, type, image, rating
+class Note(models.Model):
+    EXCURSIONS = {
+        'event': 'Event',
+        'dining': 'Dining',
+        'experience': 'Experience',
+        'general': 'General',
+    }
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='notes')
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=20, choices=EXCURSIONS)
+    image = models.ImageField(upload_to='notes/', blank=True, null=True)
+    rating = models.IntegerField(validators=[MaxValueValidator(5)], default=1)
+
+    def __str__(self):
+        return f"{self.name} in {self.trip.city}"
