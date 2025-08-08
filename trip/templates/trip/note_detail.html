@@ -1,0 +1,30 @@
+{% extends 'trip/_base.html' %}
+
+{% block content %}
+    <h1 class="text-4xl underline underline-offset-4 mb-8">Note Details</h1>
+    <!-- Update Button -->
+    <a class="px-7 py-2 bg-gray-300 rounded md:mr-4 hover:bg-gray-200" 
+       href="{% url 'note-update' note.pk %}">
+        Edit
+    </a>
+
+    <!-- Delete Form -->
+    <form class="inline" action="{% url 'note-delete' note.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" 
+               class="px-7 py-2 bg-red-300 rounded hover:bg-red-200 hover:cursor-pointer" 
+               value="Delete">
+    </form>
+ 
+    <div class="bg-gray-50 p-8 rounded shadow my-4">
+        <p class="text-2x1">{{ note.name }}</p>
+        <p class="text-2x1">Description: {{ note.description }}</p>
+        <p class="text-2x1">Type: {{ note.type|title }}</p>
+        <p class="text-2x1">Rating: {{ note.rating }}/5</p>
+        {% if note.image %}
+        <img src="{{note.image.url}}" alt="{{note.name}}" style="max-width: 50%; height: auto;" class="mt-4 rounded">
+        {% else %}
+        <div class="w-48 h-32 bg-gray-200 flex items-center justify-center rounded-t-md">No Image</div>
+        {% endif %}
+    </div>
+{% endblock content %}

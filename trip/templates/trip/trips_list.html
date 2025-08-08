@@ -1,16 +1,29 @@
-<h1>My Trips</h1>
-{% if user.is_authenticated %}
-    <p>Logged in as {{ user.username }}</p>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-{% else %}
-    <p>Please <a href="{% url 'login' %}">Login</a></p>
-{% endif %}
+{% extends "trip/_base.html" %}
+{% block content %}
+<h1 class="text-4xl underline underline-offset-4 mb-8">My Trips</h1>
 
-<ul>
-    {% for trip in trips %}
-        <li>Trip to {{ trip.city }} in {{ trip.country }}</li>
-    {% endfor %}
-</ul>
+{% for trip in trips %}
+    <div class="bg-gray-50 p-10 rounded shadow my-4 hover:shadow-lg hover:cursor-pointer">
+        <a href="{% url 'trip-detail' trip.pk %}">
+            <p class="text-lg font-medium">
+                {{ trip.country }} | {{ trip.city }}
+            </p>
+            <p class="text-sm pt-4 text-gray-700">
+                {% if trip.start_date %}
+                    {{ trip.start_date|date:"F jS" }}
+                {% else %}
+                    Start date unknown
+                {% endif %}
+                to
+                {% if trip.end_date %}
+                    {{ trip.end_date|date:"F jS" }}
+                {% else %}
+                    End date unknown
+                {% endif %}
+            </p>
+        </a>
+    </div>
+{% empty %}
+    <p class="text-gray-500 italic">No trips found.</p>
+{% endfor %}
+{% endblock %}
